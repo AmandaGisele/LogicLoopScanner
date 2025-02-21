@@ -283,7 +283,7 @@ func reverseCapture() (err error) {
 }
 
 func getCoordinatesFromDB(macAddress string) (lat float64, lon float64, err error) {
-	connString := "server=wifinavigationapp.database.windows.net;user id=logicloop2025@gmail.com;password=P@ssw0rd2025;database=FIND3-MAC-to-GPS"
+	connString := "server=wifinavigationapp.database.windows.net;user id=logicloop2025;password=P@ssw0rd2025;database=FIND3-MAC-to-GPS"
 	db, err := sql.Open("sqlserver", connString)
 	if err != nil {
 		return 0, 0, err
