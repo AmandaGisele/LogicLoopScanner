@@ -294,6 +294,27 @@ func getLocationMap() map[string]Coordinates {
 	locationMap["C8:99:B2:0F:39:3E"] = Coordinates{Latitude: 51.1274562, Longitude: -114.0877447}
 	locationMap["8C:76:3F:66:BA:59"] = Coordinates{Latitude: 51.0888833, Longitude: -114.1367497}
 	locationMap["8C:76:3F:66:BA:5A"] = Coordinates{Latitude: 51.0888833, Longitude: -114.1367497}
+	//SAIT Stan Grad//
+	locationMap["A8:5B:F7:EA:15:B0"] = Coordinates{Latitude: 51.065239, Longitude: -114.0886784}
+	locationMap["A8:5B:F7:EA:15:A0"] = Coordinates{Latitude: 51.065239, Longitude: -114.0886784}
+	locationMap["D0:D3:E0:92:27:90"] = Coordinates{Latitude: 51.0652369, Longitude: -114.0888578}
+	locationMap["D0:D3:E0:91:DC:40"] = Coordinates{Latitude: 51.0652369, Longitude: -114.0888578}
+	locationMap["D0:4D:C6:BF:2A:00"] = Coordinates{Latitude: 51.0653256, Longitude: -114.0886509}
+	locationMap["D0:4D:C6:BF:2A:10"] = Coordinates{Latitude: 51.0653256, Longitude: -114.0886509}
+	locationMap["A8:5B:F7:EC:6D:10"] = Coordinates{Latitude: 51.0654716, Longitude: -114.0886489}
+	locationMap["A8:5B:F7:EC:6D:00"] = Coordinates{Latitude: 51.0654716, Longitude: -114.0886489}
+	locationMap["A8:5B:F7:EC:92:50"] = Coordinates{Latitude: 51.0651766, Longitude: -114.0888317}
+	locationMap["A8:5B:F7:EC:92:40"] = Coordinates{Latitude: 51.0651766, Longitude: -114.0888317}
+	locationMap["D0:4D:C6:BF:0F:30"] = Coordinates{Latitude: 51.0651985, Longitude: -114.0886737}
+	locationMap["D0:4D:C6:BF:0F:40"] = Coordinates{Latitude: 51.0651985, Longitude: -114.0886737}
+	locationMap["A8:5B:F7:E9:A5:70"] = Coordinates{Latitude: 51.0650142, Longitude: -114.0887224}
+	locationMap["A8:5B:F7:E9:A5:60"] = Coordinates{Latitude: 51.0650142, Longitude: -114.0887224}
+	locationMap["D0:4D:C6:BF:4C:E0"] = Coordinates{Latitude: 51.0648745, Longitude: -114.0887301}
+	locationMap["D0:4D:C6:BF:4C:F0"] = Coordinates{Latitude: 51.0648745, Longitude: -114.0887301}
+	locationMap["A8:5B:F7:E9:FE:50"] = Coordinates{Latitude: 51.064802, Longitude: -114.0886798}
+	locationMap["A8:5B:F7:E9:FE:40"] = Coordinates{Latitude: 51.064802, Longitude: -114.0886798}
+	locationMap["A8:5B:F7:E8:8B:90"] = Coordinates{Latitude: 51.0648458, Longitude: -114.0888229}
+	locationMap["A8:5B:F7:E8:8B:80"] = Coordinates{Latitude: 51.0648458, Longitude: -114.0888229}
 	
 	return locationMap
 }
