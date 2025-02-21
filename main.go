@@ -361,7 +361,7 @@ func basicCapture() (err error) {
 					fmt.Println("Key %s not found in the map\n", key)
 					md.Ready = true
 					md.Exists = false
-					md.Error = 'Could not map mac address'
+					md.Error = "Could not map mac address"
 				}
 				/*
 				resp, err := http.Get("https://mac2gps.schollz.com/" + device)
