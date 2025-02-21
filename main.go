@@ -4,20 +4,24 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	//"net/http"//
+	"net/http"
 	"os"
 	"os/user"
 	"runtime"
 	"strconv"
 	"strings"
 	"time"
-	"database/sql"
-	_ "github.com/denisenkom/go-mssqldb"
+
 	log "github.com/cihub/seelog"
 	"github.com/montanaflynn/stats"
 	"github.com/schollz/find3/server/main/src/models"
 	"github.com/urfave/cli"
 )
+
+type Coordinates struct {
+	Latitude  float64
+	Longitude float64
+}
 
 var (
 	wifiInterface string
@@ -282,20 +286,14 @@ func reverseCapture() (err error) {
 	return
 }
 
-func getCoordinatesFromDB(macAddress string) (lat float64, lon float64, err error) {
-	connString := "server=wifinavigationapp.database.windows.net;user id=logicloop2025;password=P@ssw0rd2025;database=FIND3-MAC-to-GPS"
-	db, err := sql.Open("sqlserver", connString)
-	if err != nil {
-		return 0, 0, err
-	}
-	defer db.Close()
+func getLocationMap() map[string]Coordinates {
+	locationMap := make(map[string]Coordinates)
 
-	query := "SELECT latitude, longitude FROM mac_gps WHERE mac_address = ?"
-	err = db.QueryRow(query, macAddress).Scan(&lat, &lon)
-	if err != nil {
-		return 0, 0, err
-	}
-	return lat, lon, nil
+	locationMap["C8:99:B2:0F:39:3D"] = Coordinates{Latitude: 1, Longitude: 2}
+	locationMap["C8:99:B2:0F:39:3C"] = Coordinates{Latitude: 1, Longitude: 2}
+	locationMap["C8:99:B2:0F:39:3E"] = Coordinates{Latitude: 1, Longitude: 2}
+
+	return locationMap
 }
 
 func basicCapture() (err error) {
@@ -338,11 +336,45 @@ func basicCapture() (err error) {
 	if _, ok := payload.Sensors["wifi"]; ok && doGPS {
 		acquired := 0.0
 		for device := range payload.Sensors["wifi"] {
-			lat, lon, err := getCoordinatesFromDB(device)
-			if err != nil {
-				log.Error(err)
-				continue
-			}
+			lat, lon := func() (lat, lon float64) {
+				type MacData struct {
+					Ready      bool    `json:"ready"`
+					MacAddress string  `json:"mac"`
+					Exists     bool    `json:"exists"`
+					Latitude   float64 `json:"lat,omitempty"`
+					Longitude  float64 `json:"lon,omitempty"`
+					Error      string  `json:"err,omitempty"`
+				}
+				var md MacData
+				
+				locationMap := getLocationMap()
+				key := device
+				fmt.Printf(device)
+			
+				if coords, exists := locationMap[key]; exists {
+					fmt.Printf("Key: %s, Latitude: %f, Longitude: %f\n", key, coords.Latitude, coords.Longitude)
+				} else {
+					fmt.Printf("Key %s not found in the map\n", key)
+				}
+				/*
+				resp, err := http.Get("https://mac2gps.schollz.com/" + device)
+				if err != nil {
+					return
+				}
+				defer resp.Body.Close()
+
+				err = json.NewDecoder(resp.Body).Decode(&md)
+				if err != nil {
+					return
+				}
+				*/
+				lat = md.Latitude
+				lon = md.Longitude
+				if md.Ready && md.Exists {
+					log.Debugf("found GPS: %+v", md)
+				}
+				return
+			}()
 			if lat != 0 {
 				acquired++
 			}
