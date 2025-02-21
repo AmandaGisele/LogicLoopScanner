@@ -11,7 +11,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
+	"database/sql"
+	_ "github.com/denisenkom/go-mssqldb"
 	log "github.com/cihub/seelog"
 	"github.com/montanaflynn/stats"
 	"github.com/schollz/find3/server/main/src/models"
@@ -281,6 +282,22 @@ func reverseCapture() (err error) {
 	return
 }
 
+func getCoordinatesFromDB(macAddress string) (lat float64, lon float64, err error) {
+	connString := "server=wifinavigationapp.database.windows.net;user id=logicloop2025@gmail.com;password=P@ssw0rd2025;database=FIND3-MAC-to-GPS"
+	db, err := sql.Open("sqlserver", connString)
+	if err != nil {
+		return 0, 0, err
+	}
+	defer db.Close()
+
+	query := "SELECT latitude, longitude FROM mac_gps WHERE mac_address = ?"
+	err = db.QueryRow(query, macAddress).Scan(&lat, &lon)
+	if err != nil {
+		return 0, 0, err
+	}
+	return lat, lon, nil
+}
+
 func basicCapture() (err error) {
 	payload := models.SensorData{}
 	payload.Timestamp = time.Now().UnixNano() / int64(time.Millisecond)
@@ -321,33 +338,11 @@ func basicCapture() (err error) {
 	if _, ok := payload.Sensors["wifi"]; ok && doGPS {
 		acquired := 0.0
 		for device := range payload.Sensors["wifi"] {
-			lat, lon := func() (lat, lon float64) {
-				type MacData struct {
-					Ready      bool    `json:"ready"`
-					MacAddress string  `json:"mac"`
-					Exists     bool    `json:"exists"`
-					Latitude   float64 `json:"lat,omitempty"`
-					Longitude  float64 `json:"lon,omitempty"`
-					Error      string  `json:"err,omitempty"`
-				}
-				var md MacData
-				resp, err := http.Get("https://mac2gps.schollz.com/" + device)
-				if err != nil {
-					return
-				}
-				defer resp.Body.Close()
-
-				err = json.NewDecoder(resp.Body).Decode(&md)
-				if err != nil {
-					return
-				}
-				lat = md.Latitude
-				lon = md.Longitude
-				if md.Ready && md.Exists {
-					log.Debugf("found GPS: %+v", md)
-				}
-				return
-			}()
+			lat, lon, err := getCoordinatesFromDB(device)
+			if err != nil {
+				log.Error(err)
+				continue
+			}
 			if lat != 0 {
 				acquired++
 			}
