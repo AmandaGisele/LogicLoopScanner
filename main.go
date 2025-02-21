@@ -289,10 +289,10 @@ func reverseCapture() (err error) {
 func getLocationMap() map[string]Coordinates {
 	locationMap := make(map[string]Coordinates)
 
-	locationMap["C8:99:B2:0F:39:3D"] = Coordinates{Latitude: 1, Longitude: 2}
-	locationMap["C8:99:B2:0F:39:3C"] = Coordinates{Latitude: 1, Longitude: 2}
-	locationMap["C8:99:B2:0F:39:3E"] = Coordinates{Latitude: 1, Longitude: 2}
-
+	locationMap["C8:99:B2:0F:39:3D"] = Coordinates{Latitude: 51.1274562, Longitude: -114.0877447}
+	locationMap["C8:99:B2:0F:39:3C"] = Coordinates{Latitude: 51.1274562, Longitude: -114.0877447}
+	locationMap["C8:99:B2:0F:39:3E"] = Coordinates{Latitude: 51.1274562, Longitude: -114.0877447}
+	
 	return locationMap
 }
 
@@ -348,13 +348,20 @@ func basicCapture() (err error) {
 				var md MacData
 				
 				locationMap := getLocationMap()
-				key := device
-				fmt.Printf(device)
+				key := strings.ToUpper(device)
+				md.MacAddress = key
 			
 				if coords, exists := locationMap[key]; exists {
-					fmt.Printf("Key: %s, Latitude: %f, Longitude: %f\n", key, coords.Latitude, coords.Longitude)
+					fmt.Println("Key: %s, Latitude: %f, Longitude: %f\n", key, coords.Latitude, coords.Longitude)
+					md.Latitude = coords.Latitude
+					md.Longitude = coords.Longitude
+					md.Ready = true
+					md.Exists = true
 				} else {
-					fmt.Printf("Key %s not found in the map\n", key)
+					fmt.Println("Key %s not found in the map\n", key)
+					md.Ready = true
+					md.Exists = false
+					md.Error = 'Could not map mac address'
 				}
 				/*
 				resp, err := http.Get("https://mac2gps.schollz.com/" + device)
