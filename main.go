@@ -292,6 +292,8 @@ func getLocationMap() map[string]Coordinates {
 	locationMap["C8:99:B2:0F:39:3D"] = Coordinates{Latitude: 51.1274562, Longitude: -114.0877447}
 	locationMap["C8:99:B2:0F:39:3C"] = Coordinates{Latitude: 51.1274562, Longitude: -114.0877447}
 	locationMap["C8:99:B2:0F:39:3E"] = Coordinates{Latitude: 51.1274562, Longitude: -114.0877447}
+	locationMap["8C:76:3F:66:BA:59"] = Coordinates{Latitude: 51.0888833, Longitude: -114.1367497}
+	locationMap["8C:76:3F:66:BA:5A"] = Coordinates{Latitude: 51.0888833, Longitude: -114.1367497}
 	
 	return locationMap
 }
